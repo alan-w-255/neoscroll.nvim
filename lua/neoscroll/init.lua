@@ -221,7 +221,7 @@ local neoscroll = {}
 -- lines: number of lines to scroll or fraction of window to scroll
 -- move_cursor: scroll the window and the cursor simultaneously
 -- easing_function: name of the easing function to use for the scrolling animation
-function neoscroll.scroll(lines, move_cursor, time, easing_function, info)
+function neoscroll.scroll(lines, move_cursor, time, easing_function, info, onlyMoveCursor)
 	-- If lines is a fraction of the window transform it to lines
 	if utils.is_float(lines) then
 		lines = utils.get_lines_from_win_fraction(lines)
@@ -272,6 +272,9 @@ function neoscroll.scroll(lines, move_cursor, time, easing_function, info)
 	local ef = easing_function and easing_function or opts.easing_function
 
 	local lines_to_scroll = math.abs(relative_line - target_line)
+        if onlyMoveCursor then
+            scroll_window = false
+        end
 	scroll_one_line(lines, scroll_window, scroll_cursor, data)
 	if lines_to_scroll == 1 then
 		stop_scrolling(move_cursor, info)
@@ -301,6 +304,9 @@ function neoscroll.scroll(lines, move_cursor, time, easing_function, info)
       stop_scrolling(move_cursor, info)
       return
     end
+                if onlyMoveCursor then
+                    scroll_window = false
+                end
 		scroll_one_line(lines_to_scroll, scroll_window, scroll_cursor, data)
 		if math.abs(lines_to_scroll) == 1 then
 			stop_scrolling(move_cursor, info)
